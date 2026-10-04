@@ -1,0 +1,21 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Runtime output and uploads
+uploads/*
+!uploads/.gitkeep
+compressed/*
+!compressed/.gitkeep
+
+# Temporary files & editor configs
+* - Copy.*
+*.tmp
+.vscode/
+.idea/
+.DS_Store

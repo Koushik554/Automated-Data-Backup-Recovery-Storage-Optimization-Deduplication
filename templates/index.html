@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StorageOptimizer – Scan, Deduplicate & Compress</title>
+    <meta name="description" content="Scan folders for duplicate files, reclaim wasted space, and track compression savings with StorageOptimizer.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="nav-icon">🗄️</span>
+            <span class="nav-title">StorageOptimizer</span>
+        </div>
+        <div class="nav-status" id="statusBadge">Ready</div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+        <!-- STATS ROW -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📁</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statTotal">0</span>
+                    <span class="stat-label">Total Files Scanned</span>
+                </div>
+            </div>
+            <div class="stat-card highlight">
+                <div class="stat-icon">♻️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statDupes">0</span>
+                    <span class="stat-label">Duplicate Groups</span>
+                </div>
+            </div>
+            <div class="stat-card danger">
+                <div class="stat-icon">💾</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statWasted">0 B</span>
+                    <span class="stat-label">Wasted Space</span>
+                </div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statSaved">0 B</span>
+                    <span class="stat-label">Space Saved</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCAN & COMPRESS SECTION (2-COL) -->
+        <div class="action-grid">
+            <!-- SCAN SECTION -->
+            <section class="card">
+                <h2 class="card-title">🔍 Scan a Folder</h2>
+                <div class="scan-input-row">
+                    <input type="text" id="folderInput" class="folder-input"
+                        placeholder="Enter folder path e.g. C:\Users\beeka\Documents">
+                    <button class="btn-primary" id="scanBtn" onclick="startScan()">
+                        Start Scan
+                    </button>
+                </div>
+                <p class="scan-hint">⚠️ Scans all subdirectories and hashes each file with SHA-256.</p>
+            </section>
+
+            <!-- DIRECT COMPRESS SECTION -->
+            <section class="card">
+                <h2 class="card-title">🗜️ Compress a File</h2>
+                <div class="scan-input-row">
+                    <input type="text" id="compressInput" class="folder-input"
+                        placeholder="Enter full file path to compress">
+                    <button class="btn-success" id="compressBtn" onclick="compressSingleFile()">
+                        Compress
+                    </button>
+                </div>
+                <p class="scan-hint">⚡ Uses zlib DEFLATE (Level 9) compression to minimize size.</p>
+            </section>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <section class="charts-grid">
+            <div class="card chart-card">
+                <h2 class="card-title">🍩 Storage Breakdown</h2>
+                <div class="chart-wrapper">
+                    <canvas id="storageChart"></canvas>
+                </div>
+            </div>
+            <div class="card chart-card">
+                <h2 class="card-title">📈 Compression Efficiency</h2>
+                <div class="chart-wrapper">
+                    <canvas id="compressionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- DUPLICATES SECTION -->
+        <section class="card">
+            <div class="card-header-row">
+                <h2 class="card-title">🗂️ Duplicate Files</h2>
+                <button class="btn-secondary" onclick="loadDuplicates()">Refresh</button>
+            </div>
+            <div id="duplicatesContainer">
+                <p class="empty-state">No scan results yet. Enter a folder path above and click Scan.</p>
+            </div>
+        </section>
+
+        <!-- ANALYTICS TABLES SECTION -->
+        <section class="card">
+            <div class="card-header-row">
+                <h2 class="card-title">📊 Analytics & History</h2>
+                <button class="btn-secondary" onclick="loadAnalytics()">Refresh</button>
+            </div>
+
+            <!-- Top Duplicate Groups -->
+            <h3 class="section-subtitle">🔁 Top Duplicate Groups</h3>
+            <div id="topDupesContainer">
+                <p class="empty-state">No data yet.</p>
+            </div>
+
+            <!-- Compression History -->
+            <h3 class="section-subtitle" style="margin-top: 1.5rem;">🗜️ Recent Compressions</h3>
+            <div id="compressionHistoryContainer">
+                <p class="empty-state">No compressions logged yet.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>
